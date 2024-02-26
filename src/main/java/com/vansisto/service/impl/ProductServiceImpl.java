@@ -6,9 +6,10 @@ import com.vansisto.model.Product;
 import com.vansisto.service.ProductService;
 
 import java.util.List;
+import java.util.Optional;
 
 public class ProductServiceImpl implements ProductService {
-    private ProductDAO productDAO = new ProductDAOImpl();
+    private final ProductDAO productDAO = new ProductDAOImpl();
 
     @Override
     public int create(Product product) {
@@ -16,7 +17,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public Product getById(long id) {
+    public Optional<Product> getById(long id) {
         return productDAO.getById(id);
     }
 

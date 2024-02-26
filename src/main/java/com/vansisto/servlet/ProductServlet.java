@@ -12,9 +12,9 @@ import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
 
-@WebServlet("/product")
+@WebServlet(urlPatterns = "/product")
 public class ProductServlet extends HttpServlet {
-    private ProductService productService = new ProductServiceImpl();
+    private final ProductService productService = new ProductServiceImpl();
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -25,7 +25,22 @@ public class ProductServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        String respJson = RestUtil.toJson(productService.getAll());
+        String id = req.getParameter("id");
+        String respJson = RestUtil.toJson(productService.getById(Long.parseLong(id)));
         resp.getWriter().write(respJson);
+    }
+
+    @Override
+    protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        Product product = RestUtil.getFromJson(req, Product.class);
+        int status = productService.update(product);
+        resp.setStatus(status);
+    }
+
+    @Override
+    protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        String id = req.getParameter("id");
+        int status = productService.deleteById(Long.parseLong(id));
+        resp.setStatus(status);
     }
 }
